@@ -1,45 +1,45 @@
 export const homeFeatures = [
   {
-    icon: "🛰",
-    title: "Satellite analysis",
+    icon: "📍",
+    title: "Show exactly where risk concentrates",
     description:
-      "Gemini Vision reads real aerial imagery and classifies land cover into water, vegetation, built-up, and risk zones.",
+      "Gemini Vision reads real satellite imagery to pinpoint which neighborhoods, roads, and districts face the highest exposure, not just the city as a whole.",
     href: "/analyze"
   },
   {
-    icon: "🎨",
-    title: "Visual overlay",
+    icon: "📢",
+    title: "Make the invisible visible",
     description:
-      "A color-coded overlay maps flood vulnerability onto the actual terrain so the results stay intuitive and judge-friendly.",
+      "A color-coded overlay turns abstract risk data into something any official can see and act on, with no GIS expertise or technical background needed.",
     href: "/analyze"
   },
   {
-    icon: "📊",
-    title: "Vulnerability score",
+    icon: "⚖️",
+    title: "Quantify what’s at stake",
     description:
-      "Each location gets a plain-language score: Low, Medium, High, or Critical, with the reasoning explained.",
+      "Every analysis surfaces which hospitals, schools, roads, and communities sit in high-risk zones, giving authorities a concrete picture of what they are protecting.",
     href: "/analyze"
   },
   {
-    icon: "🏥",
-    title: "Asset exposure",
+    icon: "📋",
+    title: "Turn awareness into action",
     description:
-      "Hospitals, schools, roads, and communities near risk zones are surfaced and prioritized for planning.",
+      "Mekong Watch does not just flag risk. It generates specific, prioritized recommendations on where to improve drainage, restrict development, and prepare evacuation resources.",
     href: "/analyze"
+  },
+  {
+    icon: "🔁",
+    title: "Challenge the “it’s normal” mindset",
+    description:
+      "Side-by-side regional comparisons show officials how their district stacks up, making it harder to dismiss high scores as just part of life in the delta.",
+    href: "/regions"
   },
   {
     icon: "🤖",
-    title: "Gemini-powered insight",
+    title: "Powered by Gemini Vision AI",
     description:
-      "AI generates plain-language explanations and tailored recommendations for planners, responders, and local authorities.",
+      "Google Gemini reads satellite imagery like a trained analyst would, then explains its findings in plain language that is ready for planning meetings and briefings.",
     href: "/how"
-  },
-  {
-    icon: "🗺",
-    title: "Regional comparison",
-    description:
-      "Browse pre-analyzed Vietnamese locations side-by-side to understand relative flood vulnerability across regions.",
-    href: "/regions"
   }
 ];
 
