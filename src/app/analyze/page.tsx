@@ -55,13 +55,6 @@ export default function AnalyzePage() {
         </aside>
 
         <section className="map-center">
-          <div className="map-topbar">
-            <div className="map-btn active">Split view</div>
-            <div className="map-btn">Satellite only</div>
-            <div className="map-btn">Overlay only</div>
-            <div className="map-btn">Heatmap</div>
-          </div>
-
           <div className="pane-label-map" style={{ left: 12 }}>
             SATELLITE · ORIGINAL
           </div>
