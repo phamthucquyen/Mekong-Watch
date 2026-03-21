@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { LocationAutocompleteForm } from "@/components/location-autocomplete-form";
 import { homeFeatures } from "@/lib/site-content";
 
 export default function Home() {
@@ -23,12 +24,14 @@ export default function Home() {
             exists to change that.
           </p>
 
-          <div className="search-hero">
-            <input type="text" placeholder="Enter a city, district, or address in Vietnam..." />
-            <Link href="/analyze" className="primary-link">
-              Analyze →
-            </Link>
-          </div>
+          <LocationAutocompleteForm
+            action="/analyze"
+            placeholder="Enter a city, district, or address in Vietnam..."
+            wrapperClassName="relative z-30 mx-auto mb-16 w-full max-w-[540px]"
+            formClassName="search-hero !m-0"
+            inputClassName="flex-1 border-none bg-transparent px-[18px] py-[14px] text-[var(--text)] outline-none"
+            buttonClassName="primary-link"
+          />
 
           <div className="hero-stats">
             <div>
