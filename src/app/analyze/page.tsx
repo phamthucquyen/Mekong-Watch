@@ -1,4 +1,3 @@
-import { MapCanvas } from "@/components/map-canvas";
 import { LocationAutocompleteForm } from "@/components/location-autocomplete-form";
 import { mockAnalysis } from "@/lib/mock-data";
 
@@ -75,6 +74,8 @@ export default async function AnalyzePage({ searchParams }: AnalyzePageProps) {
   const params = await searchParams;
   const location = Array.isArray(params.location) ? params.location[0] : params.location;
   const submittedLocation = location?.trim();
+  const isSpecificAddress = /\d/.test(submittedLocation ?? "");
+  const satelliteImageUrl = `/api/satellite?location=${encodeURIComponent(submittedLocation ?? "")}`;
 
   if (!submittedLocation) {
     return <EmptyAnalyzeState />;
@@ -133,18 +134,49 @@ export default async function AnalyzePage({ searchParams }: AnalyzePageProps) {
         </aside>
 
         <section className="map-center">
-          <div className="pane-label-map" style={{ left: 12 }}>
-            SATELLITE · ORIGINAL
-          </div>
-          <div className="pane-label-map" style={{ right: 12 }}>
-            GEMINI · OVERLAY
-          </div>
+          <div className="map-frame">
+            <div className="pane-label-map" style={{ left: 12 }}>
+              SATELLITE · ORIGINAL
+            </div>
+            <div className="pane-label-map" style={{ right: 12 }}>
+              GEMINI · OVERLAY
+            </div>
+            <div
+  className="grid gap-4 xl:grid-cols-2"
+  style={{ minHeight: 520 }}
+>
+  <div className="overflow-hidden rounded-[24px] border border-[var(--border)] bg-[var(--navy)]">
+    <div className="flex items-center justify-between border-b border-[var(--border)] px-4 py-3">
+      <span className="text-xs uppercase tracking-[0.28em] text-[var(--text2)]">
+        Satellite · Original
+      </span>
+    </div>
 
-          <MapCanvas />
+    <img
+  src={satelliteImageUrl}
+  alt={`Satellite view of ${submittedLocation}`}
+  className="block h-auto w-full"
+/>
+</div>
+  <div className="overflow-hidden rounded-[24px] border border-[var(--border)] bg-[var(--navy)]">
+    <div className="flex items-center justify-between border-b border-[var(--border)] px-4 py-3">
+      <span className="text-xs uppercase tracking-[0.28em] text-[var(--text2)]">
+        Analysis View
+      </span>
+    </div>
 
-          <div className="map-zoom">
-            <div className="zoom-btn">+</div>
-            <div className="zoom-btn">−</div>
+    <img
+      src={satelliteImageUrl}
+      alt={`Analysis placeholder for ${submittedLocation}`}
+      className="block h-[460px] w-full object-cover"
+    />
+  </div>
+</div>
+
+            <div className="map-zoom">
+              <div className="zoom-btn">+</div>
+              <div className="zoom-btn">−</div>
+            </div>
           </div>
         </section>
 

@@ -161,8 +161,55 @@ function drawOverlay(
   ctx.fillText("RISK ZONE", xOffset + width * 0.44, height * 0.34);
 }
 
-export function MapCanvas() {
+function drawCoverImage(
+  ctx: CanvasRenderingContext2D,
+  image: HTMLImageElement,
+  dx: number,
+  dy: number,
+  dWidth: number,
+  dHeight: number
+) {
+  const imageAspect = image.naturalWidth / image.naturalHeight;
+  const destinationAspect = dWidth / dHeight;
+
+  let sourceWidth = image.naturalWidth;
+  let sourceHeight = image.naturalHeight;
+  let sourceX = 0;
+  let sourceY = 0;
+
+  if (imageAspect > destinationAspect) {
+    sourceWidth = image.naturalHeight * destinationAspect;
+    sourceX = (image.naturalWidth - sourceWidth) / 2;
+  } else {
+    sourceHeight = image.naturalWidth / destinationAspect;
+    sourceY = (image.naturalHeight - sourceHeight) / 2;
+  }
+
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = "high";
+  ctx.drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight, dx, dy, dWidth, dHeight);
+}
+
+type MapCanvasProps = {
+  satelliteImageUrl?: string;
+  overlayOnly?: boolean;
+};
+
+export function MapCanvas({ satelliteImageUrl, overlayOnly = false }: MapCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const imageRef = useRef<HTMLImageElement | null>(null);
+
+  useEffect(() => {
+    imageRef.current = null;
+
+    if (!satelliteImageUrl) {
+      return;
+    }
+
+    const image = new Image();
+    image.src = satelliteImageUrl;
+    imageRef.current = image;
+  }, [satelliteImageUrl]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -180,38 +227,53 @@ export function MapCanvas() {
     const render = (now: number) => {
       const width = canvas.offsetWidth;
       const height = canvas.offsetHeight;
+      const devicePixelRatio = window.devicePixelRatio || 1;
+      const scaledWidth = Math.floor(width * devicePixelRatio);
+      const scaledHeight = Math.floor(height * devicePixelRatio);
 
-      if (canvas.width !== width || canvas.height !== height) {
-        canvas.width = width;
-        canvas.height = height;
+      if (canvas.width !== scaledWidth || canvas.height !== scaledHeight) {
+        canvas.width = scaledWidth;
+        canvas.height = scaledHeight;
       }
 
-      const midpoint = width / 2;
+      context.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+
+      const midpoint = overlayOnly ? 0 : width / 2;
       context.clearRect(0, 0, width, height);
 
-      drawSatellite(context, midpoint, height);
-      drawOverlay(context, midpoint, midpoint, height, now);
+      if (!overlayOnly) {
+        const satelliteImage = imageRef.current;
+        if (satelliteImage && satelliteImage.complete && satelliteImage.naturalWidth > 0) {
+          drawCoverImage(context, satelliteImage, 0, 0, midpoint, height);
+        } else {
+          drawSatellite(context, midpoint, height);
+        }
+      }
 
-      context.strokeStyle = "rgba(45,143,221,0.6)";
-      context.lineWidth = 3;
-      context.beginPath();
-      context.moveTo(midpoint, 0);
-      context.lineTo(midpoint, height);
-      context.stroke();
+      drawOverlay(context, midpoint, overlayOnly ? width : midpoint, height, now);
 
-      context.fillStyle = "#0d1e30";
-      context.strokeStyle = "rgba(45,143,221,0.7)";
-      context.lineWidth = 1;
-      context.beginPath();
-      context.arc(midpoint, height / 2, 14, 0, Math.PI * 2);
-      context.fill();
-      context.stroke();
+      if (!overlayOnly) {
+        context.strokeStyle = "rgba(45,143,221,0.6)";
+        context.lineWidth = 3;
+        context.beginPath();
+        context.moveTo(midpoint, 0);
+        context.lineTo(midpoint, height);
+        context.stroke();
 
-      context.fillStyle = "rgba(45,143,221,0.8)";
-      context.font = "13px sans-serif";
-      context.textAlign = "center";
-      context.textBaseline = "middle";
-      context.fillText("⇔", midpoint, height / 2);
+        context.fillStyle = "#0d1e30";
+        context.strokeStyle = "rgba(45,143,221,0.7)";
+        context.lineWidth = 1;
+        context.beginPath();
+        context.arc(midpoint, height / 2, 14, 0, Math.PI * 2);
+        context.fill();
+        context.stroke();
+
+        context.fillStyle = "rgba(45,143,221,0.8)";
+        context.font = "13px sans-serif";
+        context.textAlign = "center";
+        context.textBaseline = "middle";
+        context.fillText("⇔", midpoint, height / 2);
+      }
 
       animationFrame = window.requestAnimationFrame(render);
     };
@@ -221,7 +283,7 @@ export function MapCanvas() {
     return () => {
       window.cancelAnimationFrame(animationFrame);
     };
-  }, []);
+  }, [overlayOnly, satelliteImageUrl]);
 
   return <canvas ref={canvasRef} className="map-canvas" />;
 }
