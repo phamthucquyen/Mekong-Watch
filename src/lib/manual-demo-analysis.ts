@@ -116,16 +116,25 @@ export function getBinhMinhDemoAnalysis(): ManualDemoAnalysis {
     ],
     recommendations: [
       {
-        title: "Map detailed evacuation routes for flood season",
-        body: "Map detailed evacuation routes for flood season."
+        title: "Deploy emergency flood barriers along the coastline perimeter",
+        body: "Deploy emergency flood barriers along the coastline perimeter.",
+        priority: "URGENT",
+        category: "Life safety",
+        timeframe: "Do first"
       },
       {
-        title: "Assess drainage infrastructure capacity",
-        body: "Assess drainage infrastructure capacity."
+        title: "Restrict new construction in the highest-exposure shoreline strip",
+        body: "Restrict new construction in the highest-exposure shoreline strip.",
+        priority: "HIGH",
+        category: "Policy",
+        timeframe: "Within months"
       },
       {
-        title: "Monitor water levels at key sensor points",
-        body: "Monitor water levels at key sensor points."
+        title: "Mark evacuation routes for residents in low-lying waterfront blocks",
+        body: "Mark evacuation routes for residents in low-lying waterfront blocks.",
+        priority: "MONITOR",
+        category: "Life safety",
+        timeframe: "Ongoing"
       }
     ]
   };

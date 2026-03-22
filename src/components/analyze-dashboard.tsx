@@ -201,9 +201,22 @@ export function AnalyzeDashboard({ submittedLocation, analysis }: AnalyzeDashboa
             </div>
             <div className="action-grid">
               {recommendedActions.map((recommendation, index) => (
-                <div key={recommendation.title} className="action-grid-card">
-                  <div className="action-grid-index">{String(index + 1).padStart(2, "0")}.</div>
+                <div key={recommendation.title} className={`action-grid-card action-grid-card--${(recommendation.priority ?? "HIGH").toLowerCase()}`}>
+                  <div className="action-grid-header">
+                    <span className="action-grid-index">{String(index + 1).padStart(2, "0")}.</span>
+                    {recommendation.priority && (
+                      <span className={`action-priority-badge action-priority-badge--${recommendation.priority.toLowerCase()}`}>
+                        {recommendation.priority}
+                      </span>
+                    )}
+                  </div>
                   <div className="action-grid-title">{recommendation.title}</div>
+                  {(recommendation.category || recommendation.timeframe) && (
+                    <div className="action-grid-meta">
+                      <span className={`action-meta-dot action-meta-dot--${(recommendation.priority ?? "high").toLowerCase()}`} />
+                      {recommendation.category}{recommendation.timeframe ? ` · ${recommendation.timeframe}` : ""}
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
@@ -212,7 +225,7 @@ export function AnalyzeDashboard({ submittedLocation, analysis }: AnalyzeDashboa
       </section>
 
       <aside className="side-panel side-panel-right">
-        <div ref={terrainRef} className="insight-card terrain-panel-card" style={labelOffset ? { marginTop: `${labelOffset}px` } : undefined}>
+        <div ref={terrainRef} className="insight-card terrain-panel-card">
           <div className="panel-section-label">TERRAIN ANALYSIS</div>
           <div className="terrain-intro">How flood risk contribution is distributed across detected land types</div>
           <div className="terrain-list">
@@ -236,7 +249,7 @@ export function AnalyzeDashboard({ submittedLocation, analysis }: AnalyzeDashboa
             ))}
           </div>
         </div>
-        <div className="insight-card alert-card">
+        <div className="insight-card alert-card" style={riskDriversHeight && labelOffset ? { height: `${labelOffset + riskDriversHeight}px` } : undefined}>
           <div className="panel-section-label">ALERT THRESHOLDS</div>
           <p className="alert-desc">Get notified when flood risk exceeds your set threshold for this location.</p>
           <form className="alert-form" onSubmit={handleAlertSubmit}>

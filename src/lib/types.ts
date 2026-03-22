@@ -39,6 +39,9 @@ export type Asset = {
 export type Recommendation = {
   title: string;
   body: string;
+  priority?: "URGENT" | "HIGH" | "MONITOR";
+  category?: string;
+  timeframe?: string;
 };
 
 export type AnalysisResponse = {
