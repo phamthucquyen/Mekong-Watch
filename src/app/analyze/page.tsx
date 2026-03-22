@@ -1,7 +1,6 @@
-import { LiveSatelliteMap } from "@/components/live-satellite-map";
+import { analyzeLocation } from "@/lib/analysis";
+import { AnalysisPreview } from "@/components/analysis-preview";
 import { LocationAutocompleteForm } from "@/components/location-autocomplete-form";
-import { MapCanvas } from "@/components/map-canvas";
-import { mockAnalysis } from "@/lib/mock-data";
 
 type AnalyzePageProps = {
   searchParams: Promise<{
@@ -33,7 +32,7 @@ function EmptyAnalyzeState() {
               <span>━━</span>
               <span>○ Satellite</span>
               <span>━━</span>
-              <span>○ Gemini AI</span>
+              <span>○ AI Segmentation</span>
               <span>━━</span>
               <span>○ Done</span>
             </div>
@@ -50,7 +49,7 @@ function EmptyAnalyzeState() {
             </h1>
             <p className="mx-auto mt-6 max-w-md text-lg leading-8 text-[var(--text2)]">
               Type a city or district in Vietnam above and click Analyze to generate a real-time
-              flood risk report.
+              shoreline exposure view.
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-3">
               {["Cần Thơ", "Hội An", "Long Xuyên", "Đà Lạt"].map((city) => (
@@ -76,11 +75,23 @@ export default async function AnalyzePage({ searchParams }: AnalyzePageProps) {
   const params = await searchParams;
   const location = Array.isArray(params.location) ? params.location[0] : params.location;
   const submittedLocation = location?.trim();
-  const liveMapZoom = /\d/.test(submittedLocation ?? "") ? 19 : 16;
 
   if (!submittedLocation) {
     return <EmptyAnalyzeState />;
   }
+
+  const analysis = await analyzeLocation(submittedLocation);
+  const liveMapZoom = analysis.source === "manual" ? 17 : /\d/.test(submittedLocation) ? 19 : 16;
+  const analysisBadge =
+    analysis.source === "manual"
+      ? "DEMO"
+      : analysis.source === "gemini"
+        ? "GEMINI"
+        : "FALLBACK";
+  const analysisTitle =
+    analysis.source === "manual"
+      ? "Manual demo overlay"
+      : "Visual interpretation";
 
   return (
     <main className="page-shell">
@@ -90,15 +101,19 @@ export default async function AnalyzePage({ searchParams }: AnalyzePageProps) {
             <div className="panel-section-label">Selected area</div>
             <div className="location-card">
               <div className="location-name">{submittedLocation}</div>
-              <div className="location-meta">Location submitted for Gemini flood analysis</div>
-              <div className="location-coords">{mockAnalysis.coordinates} · Zoom {liveMapZoom}</div>
+              <div className="location-meta">
+                {analysis.source === "manual"
+                  ? "Pinned demo overlay prepared for the Binh Minh beachfront scene"
+                  : "Satellite scene prepared for visual interpretation"}
+              </div>
+              <div className="location-coords">{analysis.coordinates} · Zoom {liveMapZoom}</div>
             </div>
           </div>
 
           <div className="score-card">
-            <div className="score-lbl">Flood vulnerability score</div>
-            <div className="score-num">{mockAnalysis.score}</div>
-            <div className="score-tier">⬥ {mockAnalysis.riskLevel.toUpperCase()} RISK</div>
+            <div className="score-lbl">{analysis.scoreContext}</div>
+            <div className="score-num">{analysis.score}</div>
+            <div className="score-tier">⬥ {analysis.riskLevel.toUpperCase()} VISUAL EXPOSURE</div>
             <div className="score-bar">
               <div className="score-fill" />
             </div>
@@ -107,7 +122,7 @@ export default async function AnalyzePage({ searchParams }: AnalyzePageProps) {
           <div>
             <div className="panel-section-label">Overlay layers</div>
             <div className="layer-list">
-              {mockAnalysis.layers.map((layer) => (
+              {analysis.layers.map((layer) => (
                 <div key={layer.key} className="layer-row on">
                   <div className="layer-dot" style={{ background: layer.color }} />
                   <span className="layer-name">{layer.label}</span>
@@ -119,9 +134,9 @@ export default async function AnalyzePage({ searchParams }: AnalyzePageProps) {
           </div>
 
           <div>
-            <div className="panel-section-label">Why this matters</div>
+            <div className="panel-section-label">Visible cues</div>
             <div className="risk-list">
-              {mockAnalysis.reasons.map((reason, index) => (
+              {analysis.reasons.map((reason, index) => (
                 <div key={reason.title} className="risk-row">
                   <span className="risk-ico">{["〰", "🏗", "🌿", "⚠", "📉"][index] ?? "•"}</span>
                   <span className="risk-txt">{reason.title}</span>
@@ -136,48 +151,29 @@ export default async function AnalyzePage({ searchParams }: AnalyzePageProps) {
 
         <section className="map-center">
           <div className="map-frame">
-            <div className="map-preview-grid">
-              <div className="map-preview-card">
-                <div className="flex items-center justify-between border-b border-[var(--border)] px-4 py-3">
-                  <span className="text-xs uppercase tracking-[0.28em] text-[var(--text2)]">
-                    Satellite · Original
-                  </span>
-                </div>
-
-                <div className="map-preview-surface">
-                  <LiveSatelliteMap address={submittedLocation} zoom={liveMapZoom} />
-                </div>
-              </div>
-
-              <div className="map-preview-card">
-                <div className="flex items-center justify-between border-b border-[var(--border)] px-4 py-3">
-                  <span className="text-xs uppercase tracking-[0.28em] text-[var(--text2)]">
-                    Analysis View
-                  </span>
-                </div>
-
-                <div className="map-preview-surface">
-                  <MapCanvas overlayOnly />
-                </div>
-              </div>
-            </div>
+            <AnalysisPreview
+              address={submittedLocation}
+              zoom={liveMapZoom}
+              satelliteImageUrl={analysis.satelliteImageUrl}
+              overlayRegions={analysis.overlayRegions}
+            />
           </div>
         </section>
 
         <aside className="side-panel side-panel-right">
           <div className="insight-card">
             <div className="insight-title">
-              AI analysis <span className="g-badge">GEMINI</span>
+              {analysisTitle} <span className="g-badge">{analysisBadge}</span>
             </div>
-            <div className="insight-text">{mockAnalysis.summary}</div>
+            <div className="insight-text">{analysis.summary}</div>
           </div>
 
           <div>
-            <div className="panel-section-label">Exposed assets detected</div>
+            <div className="panel-section-label">Visual cues detected</div>
             <div className="asset-list">
-              {mockAnalysis.assets.map((asset, index) => (
+              {analysis.assets.map((asset, index) => (
                 <div key={asset.label} className="asset-row">
-                  <span className="asset-icon">{["🏥", "🏫", "🛣", "🌾", "🏘"][index] ?? "•"}</span>
+                  <span className="asset-icon">{["〰", "⚠", "🏗", "🌿", "📍"][index] ?? "•"}</span>
                   <span className="asset-name">{asset.label}</span>
                   <span
                     className="asset-sev"
@@ -204,11 +200,22 @@ export default async function AnalyzePage({ searchParams }: AnalyzePageProps) {
           </div>
 
           <div>
-            <div className="panel-section-label">Recommended actions</div>
+            <div className="panel-section-label">Next checks</div>
             <div className="action-list">
-              {mockAnalysis.recommendations.map((recommendation) => (
+              {analysis.recommendations.map((recommendation) => (
                 <div key={recommendation.title} className="action-item">
                   {recommendation.body}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="insight-card">
+            <div className="panel-section-label">Interpretation notes</div>
+            <div className="action-list">
+              {analysis.notes.map((note) => (
+                <div key={note} className="action-item">
+                  {note}
                 </div>
               ))}
             </div>

@@ -6,6 +6,7 @@ type LiveSatelliteMapProps = {
   address: string;
   zoom: number;
   className?: string;
+  onStatusChange?: (status: "loading" | "ready" | "error") => void;
 };
 
 type GeocodeLocation = {
@@ -89,10 +90,19 @@ function loadGoogleMapsScript(apiKey: string) {
   return mapsWindow.__mekongWatchGoogleMapsPromise;
 }
 
-export function LiveSatelliteMap({ address, zoom, className = "" }: LiveSatelliteMapProps) {
+export function LiveSatelliteMap({
+  address,
+  zoom,
+  className = "",
+  onStatusChange
+}: LiveSatelliteMapProps) {
   const mapRef = useRef<HTMLDivElement | null>(null);
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+
+  useEffect(() => {
+    onStatusChange?.(status);
+  }, [onStatusChange, status]);
 
   useEffect(() => {
     let cancelled = false;

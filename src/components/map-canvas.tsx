@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import type { OverlayRegion } from "@/lib/types";
 
 function drawSatellite(ctx: CanvasRenderingContext2D, width: number, height: number) {
   ctx.fillStyle = "#1a3a2a";
@@ -193,9 +194,90 @@ function drawCoverImage(
 type MapCanvasProps = {
   satelliteImageUrl?: string;
   overlayOnly?: boolean;
+  overlayRegions?: OverlayRegion[];
 };
 
-export function MapCanvas({ satelliteImageUrl, overlayOnly = false }: MapCanvasProps) {
+function hexToRgba(hexColor: string, alpha: number) {
+  const normalized = hexColor.replace("#", "");
+
+  if (normalized.length !== 6) {
+    return hexColor;
+  }
+
+  const red = Number.parseInt(normalized.slice(0, 2), 16);
+  const green = Number.parseInt(normalized.slice(2, 4), 16);
+  const blue = Number.parseInt(normalized.slice(4, 6), 16);
+
+  return `rgba(${red}, ${green}, ${blue}, ${alpha})`;
+}
+
+function drawOverlayRegions(
+  ctx: CanvasRenderingContext2D,
+  overlayRegions: OverlayRegion[],
+  xOffset: number,
+  width: number,
+  height: number,
+  baseImage?: HTMLImageElement | null
+) {
+  if (baseImage && baseImage.complete && baseImage.naturalWidth > 0) {
+    drawCoverImage(ctx, baseImage, xOffset, 0, width, height);
+    ctx.fillStyle = "rgba(8,18,26,0.34)";
+    ctx.fillRect(xOffset, 0, width, height);
+  } else {
+    ctx.fillStyle = "#08121a";
+    ctx.fillRect(xOffset, 0, width, height);
+  }
+
+  overlayRegions.forEach((region) => {
+    const x = xOffset + region.x * width;
+    const y = region.y * height;
+    const regionWidth = region.width * width;
+    const regionHeight = region.height * height;
+    const alpha = region.fillOpacity ?? 0.12 + region.confidence * 0.2;
+    const regionLabelWidth = Math.max(92, Math.min(regionWidth, 138));
+
+    ctx.fillStyle = hexToRgba(region.color, alpha);
+    ctx.strokeStyle = region.color;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    if (region.points && region.points.length >= 3) {
+      region.points.forEach((point, index) => {
+        const px = xOffset + point.x * width;
+        const py = point.y * height;
+
+        if (index === 0) {
+          ctx.moveTo(px, py);
+        } else {
+          ctx.lineTo(px, py);
+        }
+      });
+      ctx.closePath();
+    } else {
+      ctx.roundRect(x, y, regionWidth, regionHeight, 8);
+    }
+    if (!region.strokeOnly) {
+      ctx.fill();
+    }
+    ctx.stroke();
+
+    ctx.fillStyle = "rgba(7,17,28,0.85)";
+    ctx.beginPath();
+    ctx.roundRect(x, Math.max(8, y - 22), regionLabelWidth, 18, 5);
+    ctx.fill();
+
+    ctx.fillStyle = region.color;
+    ctx.font = "bold 10px monospace";
+    ctx.textBaseline = "middle";
+    const confidenceText = `${Math.round(region.confidence * 100)}%`;
+    ctx.fillText(`${region.label.toUpperCase()} ${confidenceText}`, x + 8, Math.max(17, y - 13));
+  });
+}
+
+export function MapCanvas({
+  satelliteImageUrl,
+  overlayOnly = false,
+  overlayRegions = []
+}: MapCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const imageRef = useRef<HTMLImageElement | null>(null);
 
@@ -241,8 +323,9 @@ export function MapCanvas({ satelliteImageUrl, overlayOnly = false }: MapCanvasP
       const midpoint = overlayOnly ? 0 : width / 2;
       context.clearRect(0, 0, width, height);
 
+      const satelliteImage = imageRef.current;
+
       if (!overlayOnly) {
-        const satelliteImage = imageRef.current;
         if (satelliteImage && satelliteImage.complete && satelliteImage.naturalWidth > 0) {
           drawCoverImage(context, satelliteImage, 0, 0, midpoint, height);
         } else {
@@ -250,7 +333,18 @@ export function MapCanvas({ satelliteImageUrl, overlayOnly = false }: MapCanvasP
         }
       }
 
-      drawOverlay(context, midpoint, overlayOnly ? width : midpoint, height, now);
+      if (overlayRegions.length > 0) {
+        drawOverlayRegions(
+          context,
+          overlayRegions,
+          midpoint,
+          overlayOnly ? width : midpoint,
+          height,
+          satelliteImage
+        );
+      } else {
+        drawOverlay(context, midpoint, overlayOnly ? width : midpoint, height, now);
+      }
 
       if (!overlayOnly) {
         context.strokeStyle = "rgba(45,143,221,0.6)";
@@ -283,7 +377,7 @@ export function MapCanvas({ satelliteImageUrl, overlayOnly = false }: MapCanvasP
     return () => {
       window.cancelAnimationFrame(animationFrame);
     };
-  }, [overlayOnly, satelliteImageUrl]);
+  }, [overlayOnly, overlayRegions, satelliteImageUrl]);
 
   return <canvas ref={canvasRef} className="map-canvas" />;
 }
