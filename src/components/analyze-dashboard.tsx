@@ -112,6 +112,16 @@ export function AnalyzeDashboard({ submittedLocation, analysis }: AnalyzeDashboa
   const riskDrivers = analysis.reasons.slice(0, 3);
   const recommendedActions = analysis.recommendations.slice(0, 3);
 
+  const [alertScore, setAlertScore] = useState<string>("7");
+  const [alertEmail, setAlertEmail] = useState<string>("");
+  const [alertSaved, setAlertSaved] = useState<boolean>(false);
+
+  function handleAlertSubmit(e: React.SyntheticEvent) {
+    e.preventDefault();
+    setAlertSaved(true);
+    setTimeout(() => setAlertSaved(false), 3000);
+  }
+
   function toggleLayer(key: OverlayLayer["key"]) {
     setActiveKeys((currentKeys) =>
       currentKeys.includes(key) ? currentKeys.filter((currentKey) => currentKey !== key) : [...currentKeys, key]
@@ -225,6 +235,41 @@ export function AnalyzeDashboard({ submittedLocation, analysis }: AnalyzeDashboa
               </div>
             ))}
           </div>
+        </div>
+        <div className="insight-card alert-card">
+          <div className="panel-section-label">ALERT THRESHOLDS</div>
+          <p className="alert-desc">Get notified when flood risk exceeds your set threshold for this location.</p>
+          <form className="alert-form" onSubmit={handleAlertSubmit}>
+            <div className="alert-field">
+              <label className="alert-label">Risk score trigger</label>
+              <div className="alert-score-row">
+                <input
+                  type="range"
+                  min="1"
+                  max="10"
+                  step="0.1"
+                  value={alertScore}
+                  onChange={(e) => { setAlertSaved(false); setAlertScore(e.target.value); }}
+                  className="alert-slider"
+                />
+                <span className="alert-score-val">{Number(alertScore).toFixed(1)}</span>
+              </div>
+            </div>
+            <div className="alert-field">
+              <label className="alert-label">Notify via email</label>
+              <input
+                type="email"
+                placeholder="you@example.com"
+                value={alertEmail}
+                onChange={(e) => { setAlertSaved(false); setAlertEmail(e.target.value); }}
+                className="alert-input"
+                required
+              />
+            </div>
+            <button type="submit" className={`alert-btn ${alertSaved ? "alert-btn-saved" : ""}`}>
+              {alertSaved ? "✓ Alert saved" : "Set alert"}
+            </button>
+          </form>
         </div>
       </aside>
     </section>

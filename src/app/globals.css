@@ -1303,3 +1303,101 @@ button {
     flex-direction: column;
   }
 }
+
+.alert-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.alert-desc {
+  margin: 0;
+  color: var(--text2);
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.alert-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.alert-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.alert-label {
+  color: var(--text3);
+  font-family: var(--font-mono), monospace;
+  font-size: 9px;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+}
+
+.alert-score-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.alert-slider {
+  flex: 1;
+  accent-color: var(--blue);
+  cursor: pointer;
+}
+
+.alert-score-val {
+  min-width: 28px;
+  color: var(--blue);
+  font-family: var(--font-mono), monospace;
+  font-size: 13px;
+  font-weight: 700;
+  text-align: right;
+}
+
+.alert-input {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  background: var(--navy);
+  color: var(--text);
+  font-size: 12px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.alert-input::placeholder {
+  color: var(--text3);
+}
+
+.alert-input:focus {
+  border-color: var(--blue);
+}
+
+.alert-btn {
+  padding: 9px 14px;
+  border: none;
+  border-radius: 8px;
+  background: var(--blue);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.alert-btn:hover {
+  background: #2280c8;
+}
+
+.alert-btn-saved {
+  background: var(--teal);
+}
+
+.alert-btn-saved:hover {
+  background: var(--teal);
+}
