@@ -446,7 +446,7 @@ button {
 .side-panel-top {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 0;
 }
 
 .side-panel-right {
@@ -496,8 +496,13 @@ button {
   font-size: 9px;
 }
 
+.annotations-section {
+  margin-top: 16px;
+}
+
 .score-card {
-  padding: 11px;
+  margin-top: 20px;
+  padding: 13px;
   border: 1px solid rgba(217, 64, 64, 0.35);
   border-radius: 10px;
   background: linear-gradient(135deg, #1a0808, #2a100a);
@@ -513,22 +518,22 @@ button {
 .score-num {
   color: #e85c4a;
   font-family: var(--font-display), sans-serif;
-  font-size: 36px;
+  font-size: 40px;
   font-weight: 800;
   line-height: 1;
 }
 
 .score-tier {
-  margin-top: 2px;
+  margin-top: 4px;
   color: #e85c4a;
   font-family: var(--font-mono), monospace;
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 1.8px;
   line-height: 1.4;
 }
 
 .score-bar {
-  height: 3px;
+  height: 4px;
   margin-top: 10px;
   border-radius: 2px;
   background: rgba(255, 255, 255, 0.08);

@@ -138,7 +138,7 @@ export function AnalyzeDashboard({ submittedLocation, analysis }: AnalyzeDashboa
             </div>
           </div>
 
-          <div>
+          <div className="annotations-section">
             <div className="panel-section-label">ANNOTATIONS</div>
             <div className="layer-list">
               {analysis.layers.map((layer) => {
