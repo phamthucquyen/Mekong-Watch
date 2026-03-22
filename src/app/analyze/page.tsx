@@ -1,5 +1,5 @@
 import { analyzeLocation } from "@/lib/analysis";
-import { AnalysisPreview } from "@/components/analysis-preview";
+import { AnalyzeDashboard } from "@/components/analyze-dashboard";
 import { LocationAutocompleteForm } from "@/components/location-autocomplete-form";
 
 type AnalyzePageProps = {
@@ -84,61 +84,7 @@ export default async function AnalyzePage({ searchParams }: AnalyzePageProps) {
 
   return (
     <main className="page-shell">
-      <section className="analyze-layout">
-        <aside className="side-panel">
-          <div>
-            <div className="panel-section-label">Selected area</div>
-            <div className="location-card">
-              <div className="location-name">{submittedLocation}</div>
-              <div className="location-coords">{analysis.coordinates}</div>
-            </div>
-          </div>
-
-          <div className="score-card">
-            <div className="score-num">{analysis.score}</div>
-            <div className="score-tier">⬥ HIGH FLOOD VULNERABILITY</div>
-            <div className="score-bar">
-              <div className="score-fill" />
-            </div>
-          </div>
-
-          <div>
-            <div className="panel-section-label">ANNOTATIONS</div>
-            <div className="layer-list">
-              {analysis.layers.map((layer) => (
-                <div key={layer.key} className="layer-row on">
-                  <div className="layer-dot" style={{ background: layer.color }} />
-                  <span className="layer-name">{layer.label}</span>
-                  <span className="layer-pct">{layer.value}%</span>
-                  <div className="toggle" />
-                </div>
-              ))}
-            </div>
-          </div>
-        </aside>
-
-        <section className="map-center">
-          <div className="map-frame">
-            <AnalysisPreview
-              satelliteImageUrl={analysis.satelliteImageUrl}
-              overlayRegions={analysis.overlayRegions}
-            />
-          </div>
-        </section>
-
-        <aside className="side-panel side-panel-right">
-          <div className="insight-card">
-            <div className="panel-section-label">Interpretation notes</div>
-            <div className="action-list">
-              {analysis.notes.map((note) => (
-                <div key={note} className="action-item">
-                  {note}
-                </div>
-              ))}
-            </div>
-          </div>
-        </aside>
-      </section>
+      <AnalyzeDashboard submittedLocation={submittedLocation} analysis={analysis} />
     </main>
   );
 }

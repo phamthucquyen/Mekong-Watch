@@ -104,10 +104,9 @@ export function getBinhMinhDemoAnalysis(): ManualDemoAnalysis {
       }
     ],
     reasons: [
-      { title: "Houses are shown as the dominant inland block with an 84% box label", level: "High" },
-      { title: "Water is isolated on the full right edge with a 72% box label", level: "High" },
-      { title: "The upper vegetation region is shown separately at 20%", level: "Medium" },
-      { title: "A second smaller vegetation region appears near the lower right at 15%", level: "Medium" }
+      { title: "Proximity to water bodies detected", level: "High" },
+      { title: "Dense houses cluster close to the shoreline", level: "High" },
+      { title: "Partial vegetation buffer present", level: "Medium" }
     ],
     assets: [
       { label: "Houses box 84%", level: "High" },
@@ -117,16 +116,16 @@ export function getBinhMinhDemoAnalysis(): ManualDemoAnalysis {
     ],
     recommendations: [
       {
-        title: "Keep this view fixed",
-        body: "Use the same location wording and framing so the houses, water, and vegetation boxes remain aligned with the current Binh Minh demo image."
+        title: "Map detailed evacuation routes for flood season",
+        body: "Map detailed evacuation routes for flood season."
       },
       {
-        title: "Describe the visible labels",
-        body: "When presenting, call out the four visible annotations directly: houses 84%, water 72%, vegetation 20%, and vegetation 15%."
+        title: "Assess drainage infrastructure capacity",
+        body: "Assess drainage infrastructure capacity."
       },
       {
-        title: "Treat as showcase output",
-        body: "This manual preset is tuned for the Binh Minh demo scene and is intended as a showcase overlay rather than a generalized detector."
+        title: "Monitor water levels at key sensor points",
+        body: "Monitor water levels at key sensor points."
       }
     ]
   };
