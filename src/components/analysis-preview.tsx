@@ -1,19 +1,15 @@
 "use client";
 
-import { LiveSatelliteMap } from "@/components/live-satellite-map";
+import Image from "next/image";
 import { MapCanvas } from "@/components/map-canvas";
 import type { OverlayRegion } from "@/lib/types";
 
 type AnalysisPreviewProps = {
-  address: string;
-  zoom: number;
   satelliteImageUrl: string;
   overlayRegions: OverlayRegion[];
 };
 
 export function AnalysisPreview({
-  address,
-  zoom,
   satelliteImageUrl,
   overlayRegions
 }: AnalysisPreviewProps) {
@@ -25,7 +21,17 @@ export function AnalysisPreview({
         </div>
 
         <div className="map-preview-surface">
-          <LiveSatelliteMap address={address} zoom={zoom} />
+          <div className="relative h-full w-full bg-[var(--navy)]">
+            <Image
+              src={satelliteImageUrl}
+              alt="Static satellite view of the selected area"
+              fill
+              unoptimized
+              priority
+              sizes="(max-width: 800px) 100vw, 380px"
+              className="object-cover"
+            />
+          </div>
         </div>
       </div>
 

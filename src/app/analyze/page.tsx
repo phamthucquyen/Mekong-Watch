@@ -152,8 +152,6 @@ export default async function AnalyzePage({ searchParams }: AnalyzePageProps) {
         <section className="map-center">
           <div className="map-frame">
             <AnalysisPreview
-              address={submittedLocation}
-              zoom={liveMapZoom}
               satelliteImageUrl={analysis.satelliteImageUrl}
               overlayRegions={analysis.overlayRegions}
             />
