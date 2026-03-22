@@ -1234,12 +1234,12 @@ button {
 
 .region-card {
   display: block;
-  padding: 20px;
+  padding: 22px;
 }
 
 .region-badge {
   display: inline-block;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
   padding: 3px 10px;
   border-radius: 20px;
   font-size: 10px;
@@ -1261,12 +1261,12 @@ button {
   display: flex;
   align-items: baseline;
   gap: 8px;
-  margin-bottom: 10px;
+  margin-bottom: 6px;
 }
 
 .region-score {
   font-family: var(--font-display), sans-serif;
-  font-size: 32px;
+  font-size: 28px;
   font-weight: 800;
 }
 
@@ -1289,8 +1289,8 @@ button {
 .region-facts {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  margin-top: 12px;
+  gap: 5px;
+  margin-top: 14px;
 }
 
 .region-fact {

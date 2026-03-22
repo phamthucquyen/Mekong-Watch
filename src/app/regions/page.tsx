@@ -52,14 +52,12 @@ function tierStyles(tier: string) {
 export default function RegionsPage() {
   return (
     <main className="page-shell">
-      <section className="regions-page" style={{ paddingTop: 40, paddingBottom: 64 }}>
-        <div className="section-header" style={{ textAlign: "left", marginBottom: 8 }}>
-          <div className="section-eyebrow">MEKONG DELTA SURVEY</div>
+      <section className="regions-page" style={{ paddingTop: 24, paddingBottom: 24 }}>
+        <div className="section-header" style={{ textAlign: "left", marginBottom: 4 }}>
           <h2 className="section-title">Pre-analyzed regions</h2>
         </div>
-        <p className="page-lead" style={{ marginBottom: 40, maxWidth: 640 }}>
-          Six key locations in Vietnam&apos;s most flood-vulnerable region, analyzed and presented
-          in a website-style overview.
+        <p className="page-lead" style={{ marginBottom: 48, maxWidth: 640 }}>
+          Six key locations. Six risk profiles. All in Vietnam&apos;s most flood-exposed region.
         </p>
 
         <div className="regions-grid">
