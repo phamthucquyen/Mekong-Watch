@@ -1,4 +1,4 @@
-# Mekong Watch
+# Mekong Watch - HackDuke Code for Good 2026 Submission
 
 Mekong Watch is a web application that helps local authorities and communities in Vietnam's Mekong Delta visualize and understand flood vulnerability using satellite imagery and AI analysis. It transforms abstract flood risk data into clear, visual evidence that officials can act on.
 
