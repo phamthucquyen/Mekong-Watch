@@ -667,6 +667,32 @@ button {
   box-shadow: 0 14px 44px rgba(0, 0, 0, 0.28);
 }
 
+.map-preview-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  width: min(100%, 760px);
+  margin: 54px auto 0;
+}
+
+.map-preview-card {
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  background: var(--navy);
+}
+
+.map-preview-image {
+  display: block;
+  width: 100%;
+  height: 320px;
+  object-fit: cover;
+}
+
+.map-preview-surface {
+  height: 320px;
+}
+
 .map-split {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -775,6 +801,23 @@ button {
   font-family: var(--font-mono), monospace;
   font-size: 9px;
   letter-spacing: 1px;
+}
+
+@media (max-width: 1100px) {
+  .map-preview-grid {
+    width: 100%;
+  }
+}
+
+@media (max-width: 800px) {
+  .map-preview-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .map-preview-image,
+  .map-preview-surface {
+    height: 280px;
+  }
 }
 
 .insight-title {

@@ -1,4 +1,6 @@
+import { LiveSatelliteMap } from "@/components/live-satellite-map";
 import { LocationAutocompleteForm } from "@/components/location-autocomplete-form";
+import { MapCanvas } from "@/components/map-canvas";
 import { mockAnalysis } from "@/lib/mock-data";
 
 type AnalyzePageProps = {
@@ -74,8 +76,7 @@ export default async function AnalyzePage({ searchParams }: AnalyzePageProps) {
   const params = await searchParams;
   const location = Array.isArray(params.location) ? params.location[0] : params.location;
   const submittedLocation = location?.trim();
-  const isSpecificAddress = /\d/.test(submittedLocation ?? "");
-  const satelliteImageUrl = `/api/satellite?location=${encodeURIComponent(submittedLocation ?? "")}`;
+  const liveMapZoom = /\d/.test(submittedLocation ?? "") ? 19 : 16;
 
   if (!submittedLocation) {
     return <EmptyAnalyzeState />;
@@ -90,7 +91,7 @@ export default async function AnalyzePage({ searchParams }: AnalyzePageProps) {
             <div className="location-card">
               <div className="location-name">{submittedLocation}</div>
               <div className="location-meta">Location submitted for Gemini flood analysis</div>
-              <div className="location-coords">{mockAnalysis.coordinates} · Zoom 14</div>
+              <div className="location-coords">{mockAnalysis.coordinates} · Zoom {liveMapZoom}</div>
             </div>
           </div>
 
@@ -141,37 +142,32 @@ export default async function AnalyzePage({ searchParams }: AnalyzePageProps) {
             <div className="pane-label-map" style={{ right: 12 }}>
               GEMINI · OVERLAY
             </div>
-            <div
-  className="grid gap-4 xl:grid-cols-2"
-  style={{ minHeight: 520 }}
->
-  <div className="overflow-hidden rounded-[24px] border border-[var(--border)] bg-[var(--navy)]">
-    <div className="flex items-center justify-between border-b border-[var(--border)] px-4 py-3">
-      <span className="text-xs uppercase tracking-[0.28em] text-[var(--text2)]">
-        Satellite · Original
-      </span>
-    </div>
 
-    <img
-  src={satelliteImageUrl}
-  alt={`Satellite view of ${submittedLocation}`}
-  className="block h-auto w-full"
-/>
-</div>
-  <div className="overflow-hidden rounded-[24px] border border-[var(--border)] bg-[var(--navy)]">
-    <div className="flex items-center justify-between border-b border-[var(--border)] px-4 py-3">
-      <span className="text-xs uppercase tracking-[0.28em] text-[var(--text2)]">
-        Analysis View
-      </span>
-    </div>
+            <div className="map-preview-grid">
+              <div className="map-preview-card">
+                <div className="flex items-center justify-between border-b border-[var(--border)] px-4 py-3">
+                  <span className="text-xs uppercase tracking-[0.28em] text-[var(--text2)]">
+                    Satellite · Original
+                  </span>
+                </div>
 
-    <img
-      src={satelliteImageUrl}
-      alt={`Analysis placeholder for ${submittedLocation}`}
-      className="block h-[460px] w-full object-cover"
-    />
-  </div>
-</div>
+                <div className="map-preview-surface">
+                  <LiveSatelliteMap address={submittedLocation} zoom={liveMapZoom} />
+                </div>
+              </div>
+
+              <div className="map-preview-card">
+                <div className="flex items-center justify-between border-b border-[var(--border)] px-4 py-3">
+                  <span className="text-xs uppercase tracking-[0.28em] text-[var(--text2)]">
+                    Analysis View
+                  </span>
+                </div>
+
+                <div className="map-preview-surface">
+                  <MapCanvas overlayOnly />
+                </div>
+              </div>
+            </div>
 
             <div className="map-zoom">
               <div className="zoom-btn">+</div>
