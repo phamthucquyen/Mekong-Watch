@@ -51,12 +51,11 @@ export function getBinhMinhDemoAnalysis(): ManualDemoAnalysis {
     score: 8.2,
     riskLevel: "High",
     summary:
-      "This demo overlay is manually placed from your Binh Minh annotation so the boxes land in the same major areas you labeled: open water on the right, houses inland to the left, and vegetation along the diagonal beachfront. It is a hand-tuned showcase overlay rather than a learned detector for new scenes.",
+      "This manual Binh Minh demo view highlights the same regions shown in the analysis pane: a large inland houses block marked at 84%, open water on the right at 72%, and two vegetation areas marked at 20% and 15%. The page content is tuned to this fixed overlay so the side panels match what the viewer sees in the image.",
     layers: [
-      { key: "water", label: "Water", value: 30, color: "#3B82F6" },
-      { key: "green", label: "Vegetation", value: 16, color: "#22C55E" },
-      { key: "built", label: "Houses", value: 31, color: "#94A3B8" },
-      { key: "exposure", label: "Beach corridor", value: 23, color: "#FACC15" }
+      { key: "built", label: "Houses", value: 84, color: "#94A3B8" },
+      { key: "water", label: "Water", value: 72, color: "#3B82F6" },
+      { key: "green", label: "Vegetation", value: 35, color: "#22C55E" }
     ],
     overlayRegions: [
       {
@@ -105,29 +104,29 @@ export function getBinhMinhDemoAnalysis(): ManualDemoAnalysis {
       }
     ],
     reasons: [
-      { title: "The water box covers the full right-hand sea area from your annotation", level: "High" },
-      { title: "The houses box sits over the large inland block on the left side of the scene", level: "High" },
-      { title: "Vegetation is split into the upper strip and lower-right pocket you marked", level: "Medium" },
-      { title: "A narrow beach corridor remains between inland frontage and the water edge", level: "Medium" }
+      { title: "Houses are shown as the dominant inland block with an 84% box label", level: "High" },
+      { title: "Water is isolated on the full right edge with a 72% box label", level: "High" },
+      { title: "The upper vegetation region is shown separately at 20%", level: "Medium" },
+      { title: "A second smaller vegetation region appears near the lower right at 15%", level: "Medium" }
     ],
     assets: [
-      { label: "Water zone box", level: "High" },
-      { label: "House block box", level: "High" },
-      { label: "Upper vegetation strip", level: "Medium" },
-      { label: "Lower vegetation pocket", level: "Medium" }
+      { label: "Houses box 84%", level: "High" },
+      { label: "Water box 72%", level: "High" },
+      { label: "Upper vegetation 20%", level: "Medium" },
+      { label: "Lower vegetation 15%", level: "Medium" }
     ],
     recommendations: [
       {
         title: "Keep this view fixed",
-        body: "For the most convincing demo, use the same location wording and map framing so the manual overlay stays aligned with the intended beachfront scene."
+        body: "Use the same location wording and framing so the houses, water, and vegetation boxes remain aligned with the current Binh Minh demo image."
       },
       {
-        title: "Pair with your annotation story",
-        body: "Explain that the right pane was tuned directly from your annotated reference so the classes follow the real sea, vegetation, and built-up layout."
+        title: "Describe the visible labels",
+        body: "When presenting, call out the four visible annotations directly: houses 84%, water 72%, vegetation 20%, and vegetation 15%."
       },
       {
         title: "Treat as showcase output",
-        body: "This manual preset is designed for the Binh Minh demo scene and should not be presented as a generalized detector for other addresses."
+        body: "This manual preset is tuned for the Binh Minh demo scene and is intended as a showcase overlay rather than a generalized detector."
       }
     ]
   };

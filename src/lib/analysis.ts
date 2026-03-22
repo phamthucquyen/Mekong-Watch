@@ -35,7 +35,7 @@ export async function analyzeLocation(requestedLocation: string): Promise<Analys
       ...mockAnalysis,
       ...getBinhMinhDemoAnalysis(),
       analysisScope: "visual",
-      scoreContext: "Manual shoreline exposure preset for the Binh Minh demo scene",
+      scoreContext: "Manual annotation summary for the Binh Minh demo scene",
       location: geocoded.displayName,
       region: geocoded.region || mockAnalysis.region,
       coordinates: formatCoordinates(geocoded.lat, geocoded.lng),
@@ -44,7 +44,7 @@ export async function analyzeLocation(requestedLocation: string): Promise<Analys
       satelliteImageUrl: satellite.imageUrl,
       notes: [
         "This right-pane overlay is manually tuned from your own annotation for the Binh Minh, Cua Lo, Nghe An demo scene.",
-        "This preset now triggers for common Binh Minh and Cua Lo query variants so the demo reliably uses the manual overlay."
+        "The supporting text on this page is now aligned to the visible analysis labels: houses 84%, water 72%, vegetation 20%, and vegetation 15%."
       ]
     };
   }
