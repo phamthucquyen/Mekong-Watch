@@ -16,7 +16,6 @@ export function SiteNav() {
   return (
     <nav className="site-nav">
       <Link className="nav-logo" href="/">
-        <div className="nav-logo-icon">🌊</div>
         <div>
           <div className="nav-logo-text">MEKONG WATCH</div>
           <span className="nav-logo-sub">FLOOD RISK INTELLIGENCE</span>
