@@ -136,13 +136,6 @@ export default async function AnalyzePage({ searchParams }: AnalyzePageProps) {
 
         <section className="map-center">
           <div className="map-frame">
-            <div className="pane-label-map" style={{ left: 12 }}>
-              SATELLITE · ORIGINAL
-            </div>
-            <div className="pane-label-map" style={{ right: 12 }}>
-              GEMINI · OVERLAY
-            </div>
-
             <div className="map-preview-grid">
               <div className="map-preview-card">
                 <div className="flex items-center justify-between border-b border-[var(--border)] px-4 py-3">
@@ -167,11 +160,6 @@ export default async function AnalyzePage({ searchParams }: AnalyzePageProps) {
                   <MapCanvas overlayOnly />
                 </div>
               </div>
-            </div>
-
-            <div className="map-zoom">
-              <div className="zoom-btn">+</div>
-              <div className="zoom-btn">−</div>
             </div>
           </div>
         </section>

@@ -660,11 +660,7 @@ button {
   width: min(100%, 860px);
   height: min(100%, 620px);
   aspect-ratio: 1.18 / 1;
-  overflow: hidden;
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  background: #07111c;
-  box-shadow: 0 14px 44px rgba(0, 0, 0, 0.28);
+  background: transparent;
 }
 
 .map-preview-grid {
@@ -741,66 +737,10 @@ button {
   background: linear-gradient(to bottom, rgba(7, 17, 28, 0.9), transparent);
 }
 
-.map-btn,
-.zoom-btn {
-  cursor: pointer;
-  color: var(--text2);
-  border: 1px solid var(--border);
-  background: rgba(13, 30, 48, 0.85);
-}
-
-.map-btn {
-  padding: 6px 12px;
-  border-radius: 6px;
-  font-family: var(--font-mono), monospace;
-  font-size: 10px;
-  letter-spacing: 0.5px;
-}
-
-.map-btn.active {
-  color: #60b4f8;
-  border-color: var(--blue);
-  background: rgba(45, 143, 221, 0.15);
-}
-
 .map-canvas {
   display: block;
   width: 100%;
   height: 100%;
-}
-
-.map-zoom {
-  position: absolute;
-  right: 16px;
-  bottom: 16px;
-  z-index: 10;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.zoom-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 7px;
-  font-size: 18px;
-}
-
-.pane-label-map {
-  position: absolute;
-  top: 12px;
-  z-index: 10;
-  padding: 4px 10px;
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  background: rgba(7, 17, 28, 0.7);
-  color: var(--text3);
-  font-family: var(--font-mono), monospace;
-  font-size: 9px;
-  letter-spacing: 1px;
 }
 
 @media (max-width: 1100px) {
