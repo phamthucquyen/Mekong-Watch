@@ -70,10 +70,29 @@ export function AnalyzeDashboard({ submittedLocation, analysis }: AnalyzeDashboa
   const leftTopRef = useRef<HTMLDivElement>(null);
   const [leftTopHeight, setLeftTopHeight] = useState<number>(0);
 
+  const riskDriversRef = useRef<HTMLDivElement>(null);
+  const [riskDriversHeight, setRiskDriversHeight] = useState<number>(0);
+
+  const terrainRef = useRef<HTMLDivElement>(null);
+  const [terrainHeight, setTerrainHeight] = useState<number>(0);
+
+  const selectedAreaLabelRef = useRef<HTMLDivElement>(null);
+  const [labelOffset, setLabelOffset] = useState<number>(0);
+
   useEffect(() => {
     const updateHeight = () => {
+      if (selectedAreaLabelRef.current) {
+        // 6px is the margin-bottom on .panel-section-label
+        setLabelOffset(selectedAreaLabelRef.current.offsetHeight + 6);
+      }
+      if (terrainRef.current) {
+        setTerrainHeight(terrainRef.current.offsetHeight);
+      }
       if (leftTopRef.current) {
         setLeftTopHeight(leftTopRef.current.offsetHeight);
+      }
+      if (riskDriversRef.current) {
+        setRiskDriversHeight(riskDriversRef.current.offsetHeight);
       }
     };
 
@@ -99,9 +118,9 @@ export function AnalyzeDashboard({ submittedLocation, analysis }: AnalyzeDashboa
   return (
     <section className="analyze-layout">
       <aside className="side-panel">
-        <div ref={leftTopRef} className="side-panel-top">
+        <div ref={leftTopRef} className="side-panel-top" style={terrainHeight ? { minHeight: `${labelOffset + terrainHeight}px` } : undefined}>
           <div>
-            <div className="panel-section-label">Selected area</div>
+            <div ref={selectedAreaLabelRef} className="panel-section-label">Selected area</div>
             <div className="location-card">
               <div className="location-name">{submittedLocation}</div>
               <div className="location-coords">{analysis.coordinates}</div>
@@ -140,7 +159,7 @@ export function AnalyzeDashboard({ submittedLocation, analysis }: AnalyzeDashboa
           </div>
         </div>
 
-        <div className="insight-card risk-drivers-card">
+        <div ref={riskDriversRef} className="insight-card risk-drivers-card">
           <div className="panel-section-label">RISK DRIVERS</div>
           <div className="risk-driver-list">
             {riskDrivers.map((reason, index) => (
@@ -158,11 +177,11 @@ export function AnalyzeDashboard({ submittedLocation, analysis }: AnalyzeDashboa
 
       <section className="map-center">
         <div className="map-center-stack">
-          <div className="map-frame" style={leftTopHeight ? { height: `${leftTopHeight}px` } : undefined}>
+          <div className="map-frame" style={{ ...(leftTopHeight ? { height: `${leftTopHeight - labelOffset}px` } : {}), ...(labelOffset ? { marginTop: `${labelOffset}px` } : {}) }}>
             <AnalysisPreview satelliteImageUrl={analysis.satelliteImageUrl} overlayRegions={filteredOverlayRegions} />
           </div>
 
-          <div className="insight-card center-actions-card">
+          <div className="insight-card center-actions-card" style={riskDriversHeight ? { height: `${riskDriversHeight}px` } : undefined}>
             <div className="panel-section-label">RECOMMENDED ACTIONS</div>
             <div className="terrain-intro">
               Prioritized next steps local authorities can take before the next flood season
@@ -180,7 +199,7 @@ export function AnalyzeDashboard({ submittedLocation, analysis }: AnalyzeDashboa
       </section>
 
       <aside className="side-panel side-panel-right">
-        <div className="insight-card terrain-panel-card">
+        <div ref={terrainRef} className="insight-card terrain-panel-card" style={labelOffset ? { marginTop: `${labelOffset}px` } : undefined}>
           <div className="panel-section-label">TERRAIN ANALYSIS</div>
           <div className="terrain-intro">How flood risk contribution is distributed across detected land types</div>
           <div className="terrain-list">
