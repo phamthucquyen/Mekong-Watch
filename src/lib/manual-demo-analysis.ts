@@ -53,10 +53,10 @@ export function getBinhMinhDemoAnalysis(): ManualDemoAnalysis {
     summary:
       "This demo overlay is manually placed from your Binh Minh annotation so the boxes land in the same major areas you labeled: open water on the right, houses inland to the left, and vegetation along the diagonal beachfront. It is a hand-tuned showcase overlay rather than a learned detector for new scenes.",
     layers: [
-      { key: "water", label: "Water", value: 31, color: "#3B82F6" },
-      { key: "green", label: "Vegetation", value: 18, color: "#22C55E" },
-      { key: "built", label: "Houses", value: 41, color: "#94A3B8" },
-      { key: "exposure", label: "Beach corridor", value: 10, color: "#FACC15" }
+      { key: "water", label: "Water", value: 30, color: "#3B82F6" },
+      { key: "green", label: "Vegetation", value: 16, color: "#22C55E" },
+      { key: "built", label: "Houses", value: 31, color: "#94A3B8" },
+      { key: "exposure", label: "Beach corridor", value: 23, color: "#FACC15" }
     ],
     overlayRegions: [
       {
@@ -67,7 +67,7 @@ export function getBinhMinhDemoAnalysis(): ManualDemoAnalysis {
         y: 0.0,
         width: 0.3,
         height: 1,
-        confidence: 0.96,
+        confidence: 0.72,
         fillOpacity: 0.24
       },
       {
@@ -78,7 +78,7 @@ export function getBinhMinhDemoAnalysis(): ManualDemoAnalysis {
         y: 0,
         width: 0.18,
         height: 0.46,
-        confidence: 0.82,
+        confidence: 0.20,
         fillOpacity: 0.15
       },
       {
@@ -89,7 +89,7 @@ export function getBinhMinhDemoAnalysis(): ManualDemoAnalysis {
         y: 0.05,
         width: 0.56,
         height: 0.9,
-        confidence: 0.9,
+        confidence: 0.84,
         fillOpacity: 0.12
       },
       {
@@ -100,7 +100,7 @@ export function getBinhMinhDemoAnalysis(): ManualDemoAnalysis {
         y: 0.68,
         width: 0.18,
         height: 0.27,
-        confidence: 0.8,
+        confidence: 0.15,
         fillOpacity: 0.15
       }
     ],
