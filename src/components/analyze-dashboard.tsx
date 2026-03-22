@@ -68,7 +68,6 @@ export function AnalyzeDashboard({ submittedLocation, analysis }: AnalyzeDashboa
   );
 
   const leftTopRef = useRef<HTMLDivElement>(null);
-  const [leftTopHeight, setLeftTopHeight] = useState<number>(0);
 
   const riskDriversRef = useRef<HTMLDivElement>(null);
   const [riskDriversHeight, setRiskDriversHeight] = useState<number>(0);
@@ -79,27 +78,31 @@ export function AnalyzeDashboard({ submittedLocation, analysis }: AnalyzeDashboa
   const selectedAreaLabelRef = useRef<HTMLDivElement>(null);
   const [labelOffset, setLabelOffset] = useState<number>(0);
 
+  // First pass: measure terrain and label (these don't depend on other measurements)
   useEffect(() => {
-    const updateHeight = () => {
+    const update = () => {
       if (selectedAreaLabelRef.current) {
-        // 6px is the margin-bottom on .panel-section-label
         setLabelOffset(selectedAreaLabelRef.current.offsetHeight + 6);
       }
       if (terrainRef.current) {
         setTerrainHeight(terrainRef.current.offsetHeight);
       }
-      if (leftTopRef.current) {
-        setLeftTopHeight(leftTopRef.current.offsetHeight);
-      }
+    };
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, [analysis.layers]);
+
+  // Second pass: measure riskDriversHeight after layout has settled with correct minHeight
+  useEffect(() => {
+    if (!terrainHeight || !labelOffset) return;
+    const frame = requestAnimationFrame(() => {
       if (riskDriversRef.current) {
         setRiskDriversHeight(riskDriversRef.current.offsetHeight);
       }
-    };
-
-    updateHeight();
-    window.addEventListener("resize", updateHeight);
-    return () => window.removeEventListener("resize", updateHeight);
-  }, [analysis.layers]);
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [terrainHeight, labelOffset]);
 
   const filteredOverlayRegions = useMemo(
     () => analysis.overlayRegions.filter((region) => activeKeys.includes(region.key)),
@@ -177,7 +180,7 @@ export function AnalyzeDashboard({ submittedLocation, analysis }: AnalyzeDashboa
 
       <section className="map-center">
         <div className="map-center-stack">
-          <div className="map-frame" style={{ ...(leftTopHeight ? { height: `${leftTopHeight - labelOffset}px` } : {}), ...(labelOffset ? { marginTop: `${labelOffset}px` } : {}) }}>
+          <div className="map-frame" style={{ ...(terrainHeight ? { height: `${terrainHeight}px` } : {}), ...(labelOffset ? { marginTop: `${labelOffset}px` } : {}) }}>
             <AnalysisPreview satelliteImageUrl={analysis.satelliteImageUrl} overlayRegions={filteredOverlayRegions} />
           </div>
 
