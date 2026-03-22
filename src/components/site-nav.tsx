@@ -40,7 +40,7 @@ export function SiteNav() {
       </div>
 
       <div className="nav-right">
-        <div className="nav-avatar">MW</div>
+        <div className="nav-avatar">BP</div>
       </div>
     </nav>
   );
