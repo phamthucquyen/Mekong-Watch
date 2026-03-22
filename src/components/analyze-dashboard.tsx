@@ -68,12 +68,12 @@ export function AnalyzeDashboard({ submittedLocation, analysis }: AnalyzeDashboa
   );
 
   const leftTopRef = useRef<HTMLDivElement>(null);
-  const [topSectionHeight, setTopSectionHeight] = useState<number>(0);
+  const [leftTopHeight, setLeftTopHeight] = useState<number>(0);
 
   useEffect(() => {
     const updateHeight = () => {
       if (leftTopRef.current) {
-        setTopSectionHeight(leftTopRef.current.offsetHeight);
+        setLeftTopHeight(leftTopRef.current.offsetHeight);
       }
     };
 
@@ -119,26 +119,26 @@ export function AnalyzeDashboard({ submittedLocation, analysis }: AnalyzeDashboa
           <div>
             <div className="panel-section-label">ANNOTATIONS</div>
             <div className="layer-list">
-            {analysis.layers.map((layer) => {
-              const isActive = activeKeys.includes(layer.key);
+              {analysis.layers.map((layer) => {
+                const isActive = activeKeys.includes(layer.key);
 
-              return (
-                <button
-                  key={layer.key}
-                  type="button"
-                  className={`layer-row ${isActive ? "on" : "off"}`}
-                  onClick={() => toggleLayer(layer.key)}
-                >
-                  <div className="layer-dot" style={{ background: layer.color }} />
-                  <span className="layer-name">{layer.label}</span>
-                  <span className="layer-pct">{layer.value}%</span>
-                  <span className={`toggle ${isActive ? "on" : "off"}`} aria-hidden="true" />
-                </button>
-              );
-            })}
+                return (
+                  <button
+                    key={layer.key}
+                    type="button"
+                    className={`layer-row ${isActive ? "on" : "off"}`}
+                    onClick={() => toggleLayer(layer.key)}
+                  >
+                    <div className="layer-dot" style={{ background: layer.color }} />
+                    <span className="layer-name">{layer.label}</span>
+                    <span className="layer-pct">{layer.value}%</span>
+                    <span className={`toggle ${isActive ? "on" : "off"}`} aria-hidden="true" />
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
-      </div>
 
         <div className="insight-card risk-drivers-card">
           <div className="panel-section-label">RISK DRIVERS</div>
@@ -158,7 +158,7 @@ export function AnalyzeDashboard({ submittedLocation, analysis }: AnalyzeDashboa
 
       <section className="map-center">
         <div className="map-center-stack">
-          <div className="map-frame" style={topSectionHeight ? { height: `${topSectionHeight}px` } : undefined}>
+          <div className="map-frame" style={leftTopHeight ? { height: `${leftTopHeight}px` } : undefined}>
             <AnalysisPreview satelliteImageUrl={analysis.satelliteImageUrl} overlayRegions={filteredOverlayRegions} />
           </div>
 
