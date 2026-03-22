@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { AnalysisPreview } from "@/components/analysis-preview";
 import type { AnalysisResult } from "@/lib/analysis";
 import type { OverlayLayer } from "@/lib/types";
@@ -67,6 +67,21 @@ export function AnalyzeDashboard({ submittedLocation, analysis }: AnalyzeDashboa
     analysis.layers.map((layer) => layer.key)
   );
 
+  const leftTopRef = useRef<HTMLDivElement>(null);
+  const [topSectionHeight, setTopSectionHeight] = useState<number>(0);
+
+  useEffect(() => {
+    const updateHeight = () => {
+      if (leftTopRef.current) {
+        setTopSectionHeight(leftTopRef.current.offsetHeight);
+      }
+    };
+
+    updateHeight();
+    window.addEventListener("resize", updateHeight);
+    return () => window.removeEventListener("resize", updateHeight);
+  }, [analysis.layers]);
+
   const filteredOverlayRegions = useMemo(
     () => analysis.overlayRegions.filter((region) => activeKeys.includes(region.key)),
     [activeKeys, analysis.overlayRegions]
@@ -84,25 +99,26 @@ export function AnalyzeDashboard({ submittedLocation, analysis }: AnalyzeDashboa
   return (
     <section className="analyze-layout">
       <aside className="side-panel">
-        <div>
-          <div className="panel-section-label">Selected area</div>
-          <div className="location-card">
-            <div className="location-name">{submittedLocation}</div>
-            <div className="location-coords">{analysis.coordinates}</div>
+        <div ref={leftTopRef} className="side-panel-top">
+          <div>
+            <div className="panel-section-label">Selected area</div>
+            <div className="location-card">
+              <div className="location-name">{submittedLocation}</div>
+              <div className="location-coords">{analysis.coordinates}</div>
+            </div>
           </div>
-        </div>
 
-        <div className="score-card">
-          <div className="score-num">{analysis.score}</div>
-          <div className="score-tier">HIGH FLOOD VULNERABILITY</div>
-          <div className="score-bar">
-            <div className="score-fill" style={{ width: `${Math.max(18, analysis.score * 10)}%` }} />
+          <div className="score-card">
+            <div className="score-num">{analysis.score}</div>
+            <div className="score-tier">HIGH FLOOD VULNERABILITY</div>
+            <div className="score-bar">
+              <div className="score-fill" style={{ width: `${Math.max(18, analysis.score * 10)}%` }} />
+            </div>
           </div>
-        </div>
 
-        <div>
-          <div className="panel-section-label">ANNOTATIONS</div>
-          <div className="layer-list">
+          <div>
+            <div className="panel-section-label">ANNOTATIONS</div>
+            <div className="layer-list">
             {analysis.layers.map((layer) => {
               const isActive = activeKeys.includes(layer.key);
 
@@ -122,6 +138,7 @@ export function AnalyzeDashboard({ submittedLocation, analysis }: AnalyzeDashboa
             })}
           </div>
         </div>
+      </div>
 
         <div className="insight-card risk-drivers-card">
           <div className="panel-section-label">RISK DRIVERS</div>
@@ -141,7 +158,7 @@ export function AnalyzeDashboard({ submittedLocation, analysis }: AnalyzeDashboa
 
       <section className="map-center">
         <div className="map-center-stack">
-          <div className="map-frame">
+          <div className="map-frame" style={topSectionHeight ? { height: `${topSectionHeight}px` } : undefined}>
             <AnalysisPreview satelliteImageUrl={analysis.satelliteImageUrl} overlayRegions={filteredOverlayRegions} />
           </div>
 
